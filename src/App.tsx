@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
+import Post from "./components/Post";
 
 interface User {
   address: {},
@@ -14,7 +17,7 @@ interface User {
   website: string,
 }
 
-interface Post {
+interface PostData {
   userId: number,
   id: number,
   title: string,
@@ -25,7 +28,7 @@ const App = () => {
 
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
-  
+
   useEffect(() => {
     let ignore = false;
 
@@ -35,8 +38,8 @@ const App = () => {
         .then(response => {
           if (!ignore) setPosts(response);
         })
-      }
-      
+    }
+
     startFetching();
 
     return () => {
@@ -46,7 +49,9 @@ const App = () => {
 
   return (
     <Container>
-      <h1>Posterr</h1>
+      <Typography variant="h4" fontWeight="bold">
+        Posterr
+      </Typography>
       <TextField
         id="standard-basic"
         label="What's happening?"
@@ -56,12 +61,10 @@ const App = () => {
           width: 500,
         }} />
       <Button variant="contained">Post</Button>
-      
-      <ul>
-        {posts.map((post: Post) => (
-          <li key={post.id}>{post.body}</li>
-        ))}
-      </ul>
+
+      {posts.map((post: PostData) => (
+        <Post key={post.id} content={post.body} />
+      ))}
     </Container>
   );
 }
