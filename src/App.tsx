@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import NewPost from "./components/NewPost";
 import Post from "./components/Post";
 
 interface User {
@@ -26,9 +25,9 @@ interface PostData {
 
 const App = () => {
 
-  const [users, setUsers] = useState([]);
-  const [posts, setPosts] = useState([]);
-
+  const [users, setUsers] = useState<User[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
+  
   useEffect(() => {
     let ignore = false;
 
@@ -49,18 +48,11 @@ const App = () => {
 
   return (
     <Container>
-      <Typography variant="h4" fontWeight="bold">
+      <Typography variant="h4" fontWeight="bold" my={3}>
         Posterr
       </Typography>
-      <TextField
-        id="standard-basic"
-        label="What's happening?"
-        variant="standard"
-        multiline
-        sx={{
-          width: 500,
-        }} />
-      <Button variant="contained">Post</Button>
+
+      <NewPost />
 
       {posts.map((post: PostData) => (
         <Post key={post.id} content={post.body} />
