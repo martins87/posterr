@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
 import NewPost from "./components/NewPost";
-import Post from "./components/Post";
+import Posts from "./components/Posts";
 
-interface User {
+export interface User {
   address: {},
   company: {},
   email: string,
@@ -16,7 +15,7 @@ interface User {
   website: string,
 }
 
-interface PostData {
+export interface PostData {
   userId: number,
   id: number,
   title: string,
@@ -25,27 +24,8 @@ interface PostData {
 
 const App = () => {
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [posts, setPosts] = useState<PostData[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
   
-  useEffect(() => {
-    let ignore = false;
-
-    async function startFetching() {
-      fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(response => response.json())
-        .then(response => {
-          if (!ignore) setPosts(response);
-        })
-    }
-
-    startFetching();
-
-    return () => {
-      ignore = true;
-    }
-  }, []);
-
   return (
     <Container>
       <Typography variant="h4" fontWeight="bold" my={3}>
@@ -53,10 +33,7 @@ const App = () => {
       </Typography>
 
       <NewPost />
-
-      {posts.map((post: PostData) => (
-        <Post key={post.id} content={post.body} />
-      ))}
+      <Posts />
     </Container>
   );
 }
