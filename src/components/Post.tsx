@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +13,7 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import IosShareRoundedIcon from '@mui/icons-material/IosShareRounded';
 
+import useStore from "../store/useStore";
 import UserProfile from "./UserProfile";
 
 const RandomNumber = () => {
@@ -60,26 +61,15 @@ const PostActions = () => {
 
 export type PostProps = {
   content: string,
+  userId: number,
 }
 
-const Post: FC<PostProps> = ({ content }) => {
-  const [picUrl, setPicUrl] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
+const Post: FC<PostProps> = ({ content, userId }) => {
+  const { users, usersUrl } = useStore();
   const [open, setOpen] = useState<boolean>(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      fetch('https://randomuser.me/api/')
-        .then(response => response.json())
-        .then(response => {
-          setPicUrl(response.results[0].picture.thumbnail);
-          setUsername(response.results[0].login.username);
-        })
-    }, 2000);
-  }, []);
 
   return (
     <Grid
@@ -98,14 +88,13 @@ const Post: FC<PostProps> = ({ content }) => {
         <Button
           onClick={handleOpen}
         >
-          <Avatar sx={{ width: 48, height: 48, }} src={picUrl} />
-          {/* <Avatar sx={{ width: 48, height: 48, }} /> */}
+          <Avatar sx={{ width: 48, height: 48, }} src={usersUrl[userId]} />
         </Button>
         <Modal
           open={open}
           onClose={handleClose}
         >
-          <UserProfile />
+          <UserProfile userId={userId} />
         </Modal>
       </Grid>
       <Grid
@@ -114,8 +103,7 @@ const Post: FC<PostProps> = ({ content }) => {
       >
         <Stack spacing={1}>
           <Typography sx={{ color: "rgb(83, 100, 113)" }}>
-            @{username}
-            {/* @random */}
+            @{users[userId - 1].username}
           </Typography>
           <Typography>
             {content}

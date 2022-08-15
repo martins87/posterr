@@ -4,8 +4,12 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
+import useStore from "../store/useStore";
+import Post from "./Post"; 
 import NewPost from "./NewPost";
 import { FC } from "react";
+import { Avatar } from "@mui/material";
+import { PostData } from "../App";
 
 const style = {
   position: "absolute" as "absolute",
@@ -40,19 +44,32 @@ const FollowInfo: FC<FollowInfoProps> = ({ num, text }) => {
   );
 };
 
-const UserProfile = () => {
+type UserProfileProps = {
+  userId: number,
+}
+
+const UserProfile: FC<UserProfileProps> = ({ userId }) => {
+  const { posts, users, usersUrl } = useStore();
+
   return (
     <Box sx={style}>
       <Stack spacing={1} mb={4}>
         <Box display="flex" alignItems="center" gap={1}>
+          <Avatar
+            sx={{
+              width: 48,
+              height: 48,
+              mr: 1,
+            }}
+            src={usersUrl[userId]}
+          />
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
             fontWeight="bold"
           >
-            {/* mocked */}
-            Mr. Potato Head
+            {users[userId - 1].name}
           </Typography>
           <Typography variant="subtitle2" flexGrow={1}>125 posts</Typography>
           <Button
@@ -71,7 +88,7 @@ const UserProfile = () => {
         </Box>
 
         <Typography sx={{ color: "rgb(83, 100, 113)" }}>
-          @America1Scotty
+          @{users[userId - 1].username}
         </Typography>
         <Box display="flex">
           <CalendarMonthRoundedIcon sx={{ color: "rgb(83, 100, 113)" }} />
@@ -90,7 +107,10 @@ const UserProfile = () => {
         </Box>
       </Stack>
 
-      <NewPost />
+      {/* <NewPost /> */}
+      {posts.filter(post => post.userId === userId).slice(0, 3).map((post: PostData) => (
+        <Post key={post.id} content={post.body} userId={post.userId} />
+      ))}
     </Box>
   )
 }
