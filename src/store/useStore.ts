@@ -11,6 +11,7 @@ export interface Slice {
   setPosts: (newPosts: PostData[]) => void,
   addPost: (post: PostData) => void,
   addFollowing: (userId: number) => void,
+  removeFollowing: (userId: number) => void,
 }
 
 const useStore = create<Slice>((set) => ({
@@ -41,11 +42,15 @@ const useStore = create<Slice>((set) => ({
   following: [],
   setPosts: (newPosts: PostData[]) => set({ posts: [...newPosts] }),
   setUsers: (newUsers: UserData[]) =>
-    set((state: Slice) => ({ users: [ ...state.users, ...newUsers] })),
+    set((state: Slice) => ({ users: [...state.users, ...newUsers] })),
   addPost: (post: PostData) =>
     set((state: Slice) => ({ posts: [post, ...state.posts,] })),
   addFollowing: (userId: number) =>
-    set((state: Slice) => ({ following: [ ...state.following, userId] })),
+    set((state: Slice) => ({ following: [...state.following, userId] })),
+  removeFollowing: (userId: number) =>
+    set((state: Slice) => {
+      return ({ following: [...state.following.filter(id => id !== userId)] });
+    }),
 }));
 
 export default useStore;

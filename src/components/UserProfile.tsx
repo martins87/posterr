@@ -1,13 +1,13 @@
+import { FC, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 import useStore from "../store/useStore";
 import Post from "./Post";
-import { FC } from "react";
-import { Avatar } from "@mui/material";
 import { PostData } from "../types/types";
 
 const style = {
@@ -48,14 +48,36 @@ type UserProfileProps = {
 }
 
 const UserProfile: FC<UserProfileProps> = ({ userId }) => {
-  const { addFollowing, following, posts, users, usersUrl } = useStore();
+  const {
+    following,
+    posts,
+    users,
+    usersUrl,
+    addFollowing,
+    removeFollowing,
+  } = useStore();
+  const [btnText, setBtnText] = useState<string>("Follow")
 
   const isFollowing = () => {
     return following.includes(userId);
   };
 
   const handleFollow = () => {
-    addFollowing(userId);
+    if (!isFollowing()) {
+      addFollowing(userId);
+      setBtnText("Following");
+    } else {
+      removeFollowing(userId);
+      setBtnText("Follow");
+    }
+  };
+
+  const handleMouseOver = () => {
+    setBtnText(isFollowing() ? "Unfollow" : "Follow");
+  };
+
+  const handleMouseLeave = () => {
+    setBtnText(isFollowing() ? "Following" : "Follow");
   };
 
   return (
@@ -79,22 +101,28 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
             {users[userId]?.name}
           </Typography>
           <Typography variant="subtitle2" flexGrow={1}>125 posts</Typography>
-          <Button
-            sx={{
-              background: "#000",
-              color: "#FFF",
-              textTransform: "none",
-              fontWeight: "bold",
-              borderRadius: 8,
-              px: 2,
-              "&:hover": {
-                background: "#505050",
-              }
-            }}
-            onClick={handleFollow}
-          >
-            {isFollowing() ? "Following" : "Follow"}
-          </Button>
+          {userId !== 0 && (
+            <Button
+              sx={{
+                background: isFollowing() ? "#FFF" : "#000",
+                color: isFollowing() ? "#000" : "#FFF",
+                textTransform: "none",
+                fontWeight: "bold",
+                borderRadius: 8,
+                border: "1px solid gray",
+                px: 2,
+                "&:hover": {
+                  background: isFollowing() ? "rgba(255, 0, 0, 0.3)" : "#505050",
+                  color: isFollowing() ? "#F00" : "#000",
+                }
+              }}
+              onClick={handleFollow}
+              onMouseOver={handleMouseOver}
+              onMouseLeave={handleMouseLeave}
+            >
+              {btnText}
+            </Button>
+          )}
         </Box>
 
         <Typography sx={{ color: "rgb(83, 100, 113)" }}>
@@ -121,8 +149,8 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
         .filter(post => post.userId === userId)
         .slice(0, 3)
         .map((post: PostData) => (
-        <Post key={post.id} content={post.body} userId={post.userId} />
-      ))}
+          <Post key={post.id} content={post.body} userId={post.userId} />
+        ))}
     </Box>
   )
 }
