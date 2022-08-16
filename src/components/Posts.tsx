@@ -1,4 +1,4 @@
-import { PostData } from "../App";
+import { PostData } from "../types/types"; 
 import Post from "./Post";
 
 import useStore from "../store/useStore";

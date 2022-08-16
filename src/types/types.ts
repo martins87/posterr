@@ -1,0 +1,17 @@
+export interface UserData {
+  address: {},
+  company: {},
+  email: string,
+  id: number,
+  name: string,
+  phone: string,
+  username: string,
+  website: string,
+}
+
+export interface PostData {
+  userId: number,
+  id: number,
+  title: string,
+  body: string,
+}

@@ -6,7 +6,7 @@ import useStore from "../store/useStore";
 const NewPost = () => {
   const [postContent, setPostContent] = useState<string>("");
   const [typing, setTyping] = useState<boolean>(false);
-  const { addPost } = useStore();
+  const { addPost, posts } = useStore();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPostContent(event.target.value);
@@ -15,12 +15,13 @@ const NewPost = () => {
 
   const handleNewPost = () => {
     setPostContent("");
-    addPost({
+    const newPost = {
       userId: 0,
-      id: 0,
+      id: posts.length + 1,
       title: "random title",
       body: postContent,
-    })
+    };
+    addPost(newPost);
   };
 
   return (

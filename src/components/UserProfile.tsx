@@ -5,11 +5,10 @@ import Stack from "@mui/material/Stack";
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 import useStore from "../store/useStore";
-import Post from "./Post"; 
-import NewPost from "./NewPost";
+import Post from "./Post";
 import { FC } from "react";
 import { Avatar } from "@mui/material";
-import { PostData } from "../App";
+import { PostData } from "../types/types";
 
 const style = {
   position: "absolute" as "absolute",
@@ -49,7 +48,15 @@ type UserProfileProps = {
 }
 
 const UserProfile: FC<UserProfileProps> = ({ userId }) => {
-  const { posts, users, usersUrl } = useStore();
+  const { addFollowing, following, posts, users, usersUrl } = useStore();
+
+  const isFollowing = () => {
+    return following.includes(userId);
+  };
+
+  const handleFollow = () => {
+    addFollowing(userId);
+  };
 
   return (
     <Box sx={style}>
@@ -69,7 +76,7 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
             component="h2"
             fontWeight="bold"
           >
-            {users[userId - 1].name}
+            {users[userId]?.name}
           </Typography>
           <Typography variant="subtitle2" flexGrow={1}>125 posts</Typography>
           <Button
@@ -84,11 +91,14 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
                 background: "#505050",
               }
             }}
-          >Follow</Button>
+            onClick={handleFollow}
+          >
+            {isFollowing() ? "Following" : "Follow"}
+          </Button>
         </Box>
 
         <Typography sx={{ color: "rgb(83, 100, 113)" }}>
-          @{users[userId - 1].username}
+          @{users[userId].username}
         </Typography>
         <Box display="flex">
           <CalendarMonthRoundedIcon sx={{ color: "rgb(83, 100, 113)" }} />
@@ -107,8 +117,10 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
         </Box>
       </Stack>
 
-      {/* <NewPost /> */}
-      {posts.filter(post => post.userId === userId).slice(0, 3).map((post: PostData) => (
+      {posts
+        .filter(post => post.userId === userId)
+        .slice(0, 3)
+        .map((post: PostData) => (
         <Post key={post.id} content={post.body} userId={post.userId} />
       ))}
     </Box>

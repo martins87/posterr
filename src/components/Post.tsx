@@ -103,7 +103,7 @@ const Post: FC<PostProps> = ({ content, userId }) => {
       >
         <Stack spacing={1}>
           <Typography sx={{ color: "rgb(83, 100, 113)" }}>
-            @{users[userId - 1].username}
+            @{users[userId]?.username}
           </Typography>
           <Typography>
             {content}
@@ -122,7 +122,7 @@ const Post: FC<PostProps> = ({ content, userId }) => {
         </IconButton>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Post;
