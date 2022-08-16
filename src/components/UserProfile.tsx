@@ -8,6 +8,7 @@ import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 import useStore from "../store/useStore";
 import Post from "./Post";
+import NewPost from "./NewPost";
 import { PostData } from "../types/types";
 
 const style = {
@@ -54,20 +55,29 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
     users,
     usersUrl,
     addFollowing,
+    addPostsFollowing,
     removeFollowing,
+    removePostsFollowing,
   } = useStore();
-  const [btnText, setBtnText] = useState<string>("Follow");
+
+  const totalUserPosts
+    = posts.filter(post => post.userId === userId).length;
 
   const isFollowing = () => {
     return following.includes(userId);
   };
 
+  const [btnText, setBtnText]
+    = useState<string>(isFollowing() ? "Following" : "Follow");
+
   const handleFollow = () => {
     if (!isFollowing()) {
       addFollowing(userId);
+      addPostsFollowing(userId);
       setBtnText("Following");
     } else {
       removeFollowing(userId);
+      removePostsFollowing(userId);
       setBtnText("Follow");
     }
   };
@@ -100,7 +110,9 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
           >
             {users[userId]?.name}
           </Typography>
-          <Typography variant="subtitle2" flexGrow={1}>125 posts</Typography>
+          <Typography variant="subtitle2" flexGrow={1}>
+            {totalUserPosts} {totalUserPosts > 1 ? "posts" : "post"}
+          </Typography>
           {userId !== 0 && (
             <Button
               sx={{
@@ -144,6 +156,8 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
           <FollowInfo num={79} text="Followers" />
         </Box>
       </Stack>
+
+      {userId === 0 && <NewPost />}
 
       {posts
         .filter(post => post.userId === userId)

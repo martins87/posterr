@@ -57,7 +57,17 @@ const Post: FC<PostProps> = ({ content, userId }) => {
       >
         <Stack spacing={1}>
           <Typography sx={{ color: "rgb(83, 100, 113)" }}>
-            @{users[userId]?.username}
+            <Button
+              sx={{
+                textTransform: "lowercase",
+                padding: 0,
+                color: "rgb(83, 100, 113)",
+              }}
+              variant="text"
+              onClick={handleOpen}
+            >
+              @{users[userId]?.username}
+            </Button>
           </Typography>
           <Typography>
             {content}

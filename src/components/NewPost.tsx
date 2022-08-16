@@ -14,7 +14,6 @@ const NewPost = () => {
   };
 
   const handleNewPost = () => {
-    setPostContent("");
     const newPost = {
       userId: 0,
       id: posts.length + 1,
@@ -22,6 +21,7 @@ const NewPost = () => {
       body: postContent,
     };
     addPost(newPost);
+    setPostContent("");
   };
 
   return (
@@ -33,6 +33,7 @@ const NewPost = () => {
         multiline
         sx={{
           width: 500,
+          mt: 2,
         }}
         value={postContent}
         onChange={handleChange}
@@ -48,10 +49,11 @@ const NewPost = () => {
           }}
           variant="contained"
           onClick={handleNewPost}
+          disabled={postContent.trim() === ""}
         >
           Post
         </Button>
-        {typing && (
+        {typing && postContent.trim() !== "" && (
           <Typography sx={{ color: "rgb(83, 100, 113)" }}>
             {777 - postContent.length} characters left
           </Typography>
