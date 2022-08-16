@@ -56,7 +56,7 @@ const UserProfile: FC<UserProfileProps> = ({ userId }) => {
     addFollowing,
     removeFollowing,
   } = useStore();
-  const [btnText, setBtnText] = useState<string>("Follow")
+  const [btnText, setBtnText] = useState<string>("Follow");
 
   const isFollowing = () => {
     return following.includes(userId);
